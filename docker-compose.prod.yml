@@ -1,0 +1,63 @@
+services:
+  # Backend service (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: vibe-journal-backend
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./trade_journal.db
+      - SECRET_KEY=${SECRET_KEY:-change-this-to-a-secure-random-key-in-production}
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+    volumes:
+      - ./backend/trade_journal.db:/app/trade_journal.db
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+    networks:
+      - vibe-journal-network
+    expose:
+      - "8000"
+
+  # Frontend service (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost/api}
+    container_name: vibe-journal-frontend
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - vibe-journal-network
+    expose:
+      - "3000"
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: vibe-journal-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./backend/uploads:/var/www/uploads:ro
+    depends_on:
+      - frontend
+      - backend
+    restart: unless-stopped
+    networks:
+      - vibe-journal-network
+
+networks:
+  vibe-journal-network:
+    driver: bridge
+
+volumes:
+  db-data:
