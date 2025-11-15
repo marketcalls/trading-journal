@@ -79,7 +79,6 @@ echo ""
 print_info "Obtaining SSL certificate from Let's Encrypt..."
 certbot certonly --standalone \
     -d "$DOMAIN_NAME" \
-    -d "www.$DOMAIN_NAME" \
     --email "$EMAIL" \
     --agree-tos \
     --non-interactive \
