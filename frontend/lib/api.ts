@@ -7,15 +7,50 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Enable credentials (cookies) for CSRF
 });
 
-// Request interceptor to add auth token
+// CSRF token storage
+let csrfToken: string | null = null;
+
+// Helper function to ensure CSRF token is available
+const ensureCsrfToken = async (): Promise<void> => {
+  if (!csrfToken) {
+    try {
+      // Make a simple GET request to obtain CSRF token
+      // This will be handled by the response interceptor
+      await api.get('/auth/me').catch(() => {
+        // Ignore errors (e.g., if not logged in)
+      });
+    } catch (error) {
+      // Silently fail - token will be obtained on next successful request
+    }
+  }
+};
+
+// Request interceptor to add auth token and CSRF token
 api.interceptors.request.use(
-  (config) => {
+  async (config) => {
+    // Add JWT token
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+
+    // Ensure CSRF token is available for state-changing requests
+    const stateMethods = ['post', 'put', 'patch', 'delete'];
+    if (config.method && stateMethods.includes(config.method.toLowerCase())) {
+      // If no CSRF token, try to get one
+      if (!csrfToken && token) {
+        await ensureCsrfToken();
+      }
+
+      // Add CSRF token if available
+      if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken;
+      }
+    }
+
     return config;
   },
   (error) => {
@@ -23,14 +58,26 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor to handle errors
+// Response interceptor to handle errors and extract CSRF token
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Extract and store CSRF token from response headers
+    const newCsrfToken = response.headers['x-csrf-token'];
+    if (newCsrfToken) {
+      csrfToken = newCsrfToken;
+    }
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
+    }
+    if (error.response?.status === 403 && error.response?.data?.detail?.includes('CSRF')) {
+      // CSRF token issue - clear token and retry after login
+      csrfToken = null;
+      console.error('CSRF protection error:', error.response.data.detail);
     }
     return Promise.reject(error);
   }

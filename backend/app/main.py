@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.database import init_db
 from app.routers import auth, users, portfolios, trades, analytics
+from app.middleware.csrf import CSRFProtectMiddleware
 
 
 @asynccontextmanager
@@ -20,15 +21,23 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS middleware - Allow all origins in development
+# CORS middleware - Configure for production
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://vibe.marketcalls.in",
+        "http://vibe.marketcalls.in"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-    expose_headers=["*"],
+    expose_headers=["X-CSRF-Token"],  # Expose CSRF token header
 )
+
+# CSRF Protection Middleware
+app.add_middleware(CSRFProtectMiddleware)
 
 # Include routers
 app.include_router(auth.router, prefix="/api")
