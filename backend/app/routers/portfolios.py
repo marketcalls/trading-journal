@@ -10,7 +10,7 @@ from app.models import User
 router = APIRouter(prefix="/portfolios", tags=["portfolios"])
 
 
-@router.get("/", response_model=List[Portfolio])
+@router.get("", response_model=List[Portfolio])
 async def get_my_portfolios(
     db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_active_user)
@@ -20,7 +20,7 @@ async def get_my_portfolios(
     return portfolios
 
 
-@router.post("/", response_model=Portfolio, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=Portfolio, status_code=status.HTTP_201_CREATED)
 async def create_portfolio(
     portfolio: PortfolioCreate,
     db: AsyncSession = Depends(get_db),

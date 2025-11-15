@@ -10,7 +10,7 @@ from app.models import User as UserModel
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/", response_model=List[User])
+@router.get("", response_model=List[User])
 async def get_all_users(
     skip: int = 0,
     limit: int = 100,
