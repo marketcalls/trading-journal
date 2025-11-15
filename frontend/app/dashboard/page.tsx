@@ -6,6 +6,7 @@ import { portfoliosApi } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Plus, FolderKanban } from 'lucide-react';
+import { formatINR } from '@/lib/currency';
 
 interface Portfolio {
   id: number;
@@ -95,7 +96,7 @@ export default function DashboardPage() {
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground">
-                      Initial Balance: ${portfolio.initial_balance.toFixed(2)}
+                      Initial Balance: {formatINR(portfolio.initial_balance)}
                     </p>
                   </CardContent>
                 </Card>

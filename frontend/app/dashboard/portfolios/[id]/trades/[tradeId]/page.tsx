@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { format } from 'date-fns';
+import { formatINR } from '@/lib/currency';
 
 interface Trade {
   id: number;
@@ -117,7 +118,7 @@ export default function TradeDetailPage() {
           <CardContent className="space-y-3">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Entry Price:</span>
-              <span className="font-medium">${trade.entry_price.toFixed(2)}</span>
+              <span className="font-medium">{formatINR(trade.entry_price)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Entry Date:</span>
@@ -129,7 +130,7 @@ export default function TradeDetailPage() {
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Position Size:</span>
-              <span className="font-medium">${(trade.entry_price * trade.quantity).toFixed(2)}</span>
+              <span className="font-medium">{formatINR(trade.entry_price * trade.quantity)}</span>
             </div>
           </CardContent>
         </Card>
@@ -143,7 +144,7 @@ export default function TradeDetailPage() {
               <>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Exit Price:</span>
-                  <span className="font-medium">${trade.exit_price.toFixed(2)}</span>
+                  <span className="font-medium">{formatINR(trade.exit_price)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Exit Date:</span>
@@ -154,7 +155,7 @@ export default function TradeDetailPage() {
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">P&L:</span>
                   <span className={`font-medium ${(trade.profit_loss || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    ${trade.profit_loss?.toFixed(2)}
+                    {formatINR(trade.profit_loss || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between">

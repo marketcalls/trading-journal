@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { portfoliosApi, analyticsApi } from '@/lib/api';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from 'recharts';
+import { formatINR } from '@/lib/currency';
 
 interface Portfolio {
   id: number;
@@ -137,7 +138,7 @@ export default function AnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <div className={`text-2xl font-bold ${analytics.total_profit_loss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  ${analytics.total_profit_loss.toFixed(2)}
+                  {formatINR(analytics.total_profit_loss)}
                 </div>
               </CardContent>
             </Card>
@@ -160,7 +161,7 @@ export default function AnalyticsPage() {
               </CardHeader>
               <CardContent>
                 <div className={`text-2xl font-bold ${analytics.average_profit_loss >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  ${analytics.average_profit_loss.toFixed(2)}
+                  {formatINR(analytics.average_profit_loss)}
                 </div>
               </CardContent>
             </Card>
@@ -220,11 +221,11 @@ export default function AnalyticsPage() {
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Average Win:</span>
-                  <span className="font-semibold text-green-600">${analytics.average_win.toFixed(2)}</span>
+                  <span className="font-semibold text-green-600">{formatINR(analytics.average_win)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Average Loss:</span>
-                  <span className="font-semibold text-red-600">${analytics.average_loss.toFixed(2)}</span>
+                  <span className="font-semibold text-red-600">{formatINR(analytics.average_loss)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Risk/Reward Ratio:</span>

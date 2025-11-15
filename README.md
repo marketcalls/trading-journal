@@ -1,6 +1,16 @@
 # Trade Journal Application
 
-A full-stack trade journal application for tracking trading portfolios, analyzing performance, and managing trades. Built with Next.js, shadcn/ui, FastAPI, and SQLite.
+A full-stack trade journal application for Indian stock market traders. Track your NSE/BSE trades, analyze performance, and manage multiple portfolios. Built with Next.js, shadcn/ui, FastAPI, and SQLite.
+
+**🇮🇳 Designed for Indian Markets** - Currency in INR (₹), supports NSE/BSE stock symbols (RELIANCE, TCS, INFY, etc.)
+
+## Indian Market Features
+
+- **INR Currency** (₹) - All amounts displayed in Indian Rupees
+- **NSE/BSE Support** - Track stocks from National Stock Exchange and Bombay Stock Exchange
+- **Indian Stock Symbols** - RELIANCE, TCS, INFY, HDFCBANK, ICICIBANK, etc.
+- **Lakhs & Crores** - Number formatting follows Indian numbering system
+- **IST Timezone** - Trade times in Indian Standard Time
 
 ## Features
 

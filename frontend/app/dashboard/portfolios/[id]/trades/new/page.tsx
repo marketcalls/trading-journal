@@ -82,7 +82,7 @@ export default function NewTradePage() {
                 <Input
                   id="symbol"
                   name="symbol"
-                  placeholder="AAPL, TSLA, etc."
+                  placeholder="RELIANCE, TCS, INFY, etc."
                   value={formData.symbol}
                   onChange={handleChange}
                   required

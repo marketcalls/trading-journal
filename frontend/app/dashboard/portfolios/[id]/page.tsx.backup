@@ -101,7 +101,7 @@ export default function PortfolioDetailPage() {
             <CardTitle className="text-sm font-medium">Initial Balance</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatINR(portfolio?.initial_balance || 0)}</div>
+            <div className="text-2xl font-bold">${portfolio?.initial_balance.toFixed(2)}</div>
           </CardContent>
         </Card>
 
@@ -116,7 +116,7 @@ export default function PortfolioDetailPage() {
           </CardHeader>
           <CardContent>
             <div className={`text-2xl font-bold ${totalPL >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-              {formatINR(totalPL)}
+              ${totalPL.toFixed(2)}
             </div>
           </CardContent>
         </Card>
@@ -223,7 +223,7 @@ function TradesTable({ trades, portfolioId }: { trades: Trade[]; portfolioId: nu
               </span>
             </TableCell>
             <TableCell>
-              {formatINR(trade.entry_price)}
+              ${trade.entry_price.toFixed(2)}
               <br />
               <span className="text-xs text-muted-foreground">
                 {format(new Date(trade.entry_date), 'MMM d, yyyy')}
@@ -232,7 +232,7 @@ function TradesTable({ trades, portfolioId }: { trades: Trade[]; portfolioId: nu
             <TableCell>
               {trade.exit_price ? (
                 <>
-                  {formatINR(trade.exit_price)}
+                  ${trade.exit_price.toFixed(2)}
                   <br />
                   <span className="text-xs text-muted-foreground">
                     {format(new Date(trade.exit_date!), 'MMM d, yyyy')}
@@ -246,7 +246,7 @@ function TradesTable({ trades, portfolioId }: { trades: Trade[]; portfolioId: nu
             <TableCell>
               {trade.profit_loss !== null ? (
                 <span className={trade.profit_loss >= 0 ? 'text-green-600' : 'text-red-600'}>
-                  {formatINR(trade.profit_loss)}
+                  ${trade.profit_loss.toFixed(2)}
                   <br />
                   <span className="text-xs">
                     ({trade.profit_loss_percentage?.toFixed(2)}%)
